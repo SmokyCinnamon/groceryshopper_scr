@@ -1,0 +1,5 @@
+charset,UTF-8
+type,ghost
+
+name,Let's go get groceries!
+directory,groceryshopper_scr

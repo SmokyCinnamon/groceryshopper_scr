@@ -1,0 +1,96 @@
+descript
+{
+	version,1
+}
+
+//—————————————————————————————— Sakura surfaces ——————————————————————————————
+
+surface0
+{
+	element,overlay,s0.png,0,0
+}
+
+surface1
+{
+	element,overlay,s1.png,0,0
+}
+
+surface2
+{
+	element,overlay,s2.png,0,0
+}
+
+surface3
+{
+	element,overlay,s3.png,0,0
+}
+
+surface4
+{
+	element,overlay,s4.png,0,0
+}
+
+surface5
+{
+	element,overlay,s5.png,0,0
+}
+
+surface6
+{
+	element,overlay,s6.png,0,0
+}
+
+surface7
+{
+	element,overlay,s7.png,0,0
+}
+
+surface8
+{
+	element,overlay,s8.png,0,0
+}
+
+surface9
+{
+	element,overlay,s9.png,0,0
+}
+
+surface10
+{
+	element,overlay,s10.png,0,0
+}
+
+surface11
+{
+	element,overlay,s11.png,0,0
+}
+
+surface12
+{
+	element,overlay,s12.png,0,0
+}
+
+surface13
+{
+	element,overlay,s13.png,0,0
+}
+
+surface14
+{
+	element,overlay,s14.png,0,0
+}
+
+surface15
+{
+	element,overlay,s15.png,0,0
+}
+
+surface16
+{
+	element,overlay,s16.png,0,0
+}
+
+surface17
+{
+	element,overlay,s17.png,0,0
+}

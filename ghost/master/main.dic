@@ -1,0 +1,145 @@
+//the task of writing a character like this is stressing me out tbh. What if it's wrong...
+
+OnFirstBoot {
+	totalItems = IARRAY
+	totalItemsDisplay = IARRAY
+	cartItems = IARRAY
+	cartItemsDisplay = IARRAY
+	totalCost = 0
+	runCost = 0
+	"\1\s[-1]\0\s[0]"
+	--
+	"What's on the list?\n\f[color,disable]\f[italic,1]Milk, eggs, things like that. I know I didn't give it to you before, but, we didn't have the time...\f[italic,default]\f[color,default]\n\nOkay. You are saying that again.\nWe will get milk eggs and things. Okay.\n\n\f[color,disable]\f[italic,1]Well, the list is only in my mind, I'm thinking of it. But, sure, milk first.\f[color,default]\f[italic,default]"
+}
+
+OnBoot {
+	cartItems = IARRAY
+	cartItemsDisplay = IARRAY
+	runCost = 0
+	_listItem = ("%(shoppingList)","%(shoppingList)","%(shoppingList)","%(shoppingList)","%(shoppingList)","%(shoppingList)","%(shoppingList)","%(shoppingList)","%(shoppingList)")
+	"\1\s[-1]\0\s[0]"
+	--
+	"What's on the list?\n\n"
+	--
+	"\f[color,disable]\f[italic,1]"
+	--
+	"Did you forget? That's okay. We're going to get %(_listItem[0]), %(_listItem[1]), %(_listItem[2])...\w3\n\n\f[color,default]\f[italic,default]We have %(_listItem[0]). We need to find %(_listItem[1]).\e"
+}
+
+OnClose {
+	"\1\s[-1]\0\s[0]I added all the numbers. It is %(runCost) dollars. That is a lot.\n\n\f[color,disable]\f[italic,1]Jesus christ... How on earth did we manage that?! Remind me to bring a list, next time.\f[italic,default]\f[color,default]\n\n\s[10]Okay. You said we did not have time to make a list today. You could say that again.\n\n\f[color,disable]\f[italic,1]Well... You're right. I can't promise the list will always be physical. But hey, we got some cool stuff!\f[color,default]\f[italic,default]\n\n\s[12]......"
+
+	"\1\s[-1]\0\s[0]I want to go by myself next time. You get too many things. It is %(runCost) dollars, and that is not any good.\n\n\f[color,disable]\f[italic,1]You shouldn't go to the store without me. It could be dangerous, and I'd worry, anyways!\f[color,default]\f[italic,default]\0\s[12]..."
+	--
+	"\x\-"
+}
+
+shoppingList {
+	"milk"
+	"eggs"
+	"bread"
+	"paper plates"
+	"plastic straws"
+	"grape juice"
+	"a coloring book"
+	"flour"
+	"dry cereal"
+	"peach tea"
+	"raspberry tea"
+	"peach tea mix"
+	"raspberry tea mix"
+	"pink lemonade"
+	"pink lemonade mix"
+	"printer paper"
+	"batteries"
+	"chocolate chips"
+	"sugar"
+	"brown sugar"
+	"powdered sugar"
+	"oregano"
+	"minced onions"
+	"basil"
+	"thyme"
+	"celery seed"
+	"noodles"
+}
+
+OnMouseDoubleClick {
+	OnSakuraMenu
+}
+
+OnSakuraMenu : all {
+	"\0\s[0]\b[2]\![set,autoscroll,disable]\*\_q\n[half]"
+	
+	"%*\__q[OnAiTalk]Interesting things in this aisle, huh?\__q\n"
+	
+	if LastTalk != ""; "%*\__q[OnLastTalk]I'm sorry, what was that you said?\__q\n\n"
+	else; "%*\f[color,disable]I'm sorry, what was that you said?\f[color,default]\n\n"
+
+	//talkrate later maybe
+
+	"%*\__q[OnDisplayCart]What all do we have in the cart?\__q\n"
+	"%*\__q[OnDisplayCost]How much is all of this, anyways?\__q\n"
+	"%*\__q[OnDisplayCart.Total]What things have we bought here before?\__q\n"
+	
+	"\n\n[half]%*\__q[OnCancel]Let's get back to shopping.\__q"
+	
+	"\_q"
+}
+
+OnLastTalk {
+	LastTalk
+}
+
+OnDisplayCart : all {
+	"\0\s[0]\b[2]\![set,autoscroll,disable]\*\_q"
+
+	"\f[color,disable]\f[italic,1]What all do we have in the cart?\f[italic,default]\f[color,default]\n\n[half]"
+
+	"I do not want to tell you every thing. That will take too long. I want to do it with you.\n\n" //wc has "i want to do it myself" in advocacy so i suppose the opposite wouldn't be too out of bounds to add (assuming it's alongside the former, obviously)
+
+	foreach cartItemsDisplay; _cartItem {
+		"%* %(_cartItem)\n\n[half]"
+	}
+
+	"\n\n[half]%*\__q[OnSakuraMenu]I have something else to say to you.\__q\n%*\__q[OnCancel]Let's get back to shopping.\__q"
+
+	"\_q"
+}
+
+OnDisplayCart.Total : all {
+	"\0\s[0]\b[2]\![set,autoscroll,disable]\*\_q"
+
+	"\f[color,disable]\f[italic,1]What things have we bought here before?\f[italic,default]\f[color,default]\n\n[half]"
+
+	"Every thing we have bought at this store will take longer. Remember it yourself.\n\n"
+	
+	"\f[color,disable]\f[italic,1]"
+	foreach totalItemsDisplay; _totalItem {
+		"%* %(_totalItem)\n\n[half]"
+	}
+	"\f[italic,default]\f[color,default]"
+
+	"\n\n[half]%*\__q[OnSakuraMenu]I have something else to say to you.\__q\n%*\__q[OnCancel]Let's get back to shopping.\__q"
+
+	"\_q"
+}
+
+OnDisplayCost : all {
+	"\0\s[6]\b[2]\![set,autoscroll,disable]\*\_q"
+
+	"\f[color,disable]\f[italic,1]How much is all of this, anyways?\f[italic,default]\f[color,default]\n\n[half]"
+
+	"I counted. Let me think.\n\n"
+
+	"Every thing in the shopping cart is %(runCost) dollars. That is a lot of dollars.\n"
+	"We have spent a lot at this store. It is %(totalCost) dollars. We should spend less." //i dont think spend is in weavechat but neither is buy (an oversight, in my opinion...) + tbh i can do what i want.
+
+	"\n\n[half]%*\__q[OnSakuraMenu]I have something else to say to you.\__q\n%*\__q[OnCancel]Let's get back to shopping.\__q"
+
+	"\_q"
+}
+
+OnSurfaceRestore {
+	"\1\s[-1]\0\s[0]\e"
+}

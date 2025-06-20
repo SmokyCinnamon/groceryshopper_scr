@@ -1,0 +1,219 @@
+OnAiTalk {
+	if CHAIN.IDName == "" {
+		LastTalk = RandomTalk
+	}
+	else {
+		LastTalk = ChainTalk
+	}
+	LastTalk
+}
+
+OnItemInCart {
+	//ref0 - name, ref1 - price
+	reference1 = TOINT(reference1) //force to integer
+	
+	totalCost += reference1
+	runCost += reference1
+
+	totalItems ,= "\f[color,default.anchor]$%(reference1) %(reference0)\f[color,default]"
+	cartItems ,= "\f[color,default.anchor]$%(reference1) %(reference0)\f[color,default]"
+	totalItemsDisplay = GROCERYSORT(totalItems)
+	cartItemsDisplay = GROCERYSORT(cartItems)
+
+	"\C\n\n"
+	--
+	"\f[color,disable]\f[italic,1]And for only $%(reference1)? What a steal, am I right?\f[italic,default]\f[color,default]\n\n\s[7]\w6We are not stealing it. \s[0]We will pay for it, what is right to do.\n\n\f[color,disable]\f[italic,1]It's only a joke - or, rather, a figure of speech. We'll pay for it, don't worry.\f[italic,default]\f[color,default]\w6\n\nOkay. \s[12]That is a weird thing to say.\s[17] I do not know who would want to say it.\x\e"
+
+	"Wow! Thank you! \s[5]It will be nice to have.\x\e"
+
+	"Wow! Okay! \s[5]I am happy.\x\e"
+	
+	"\s[5]Okay! Thank you!\x\e"
+	
+	"\s[5]Okay!\x\e"
+
+	"\s[5]Okay! Yay!\x\e"
+
+	"\s[5]Yay! Happy!\x\e"
+
+}
+
+OnItemReject {
+	"\C\n\n\0\s[16]\w6Okay. I will put it back.\x\e"
+
+	"\C\n\n\0\s[12]\w6%(reference1) is too many dollars for it, anyways.\x\e"
+
+	"\C\n\n\0\s[12]\w6Okay. \s[16]It's not on the list. I know.\x\e"
+}
+
+GROCERYSORT {
+	_toSort = _argv
+	_uniqueItems = ARRAYDEDUP(_toSort) //unique listings
+
+	_sorted = IARRAY
+
+	_itemNum = 0
+	foreach _uniqueItems; _uniqueItem {
+		foreach _toSort; _item {
+			if _uniqueItem == _item; _itemNum++
+			else; continue
+		}
+		_sorted ,= "%(_uniqueItem) \f[color,disable]x%(_itemNum)\f[color,default]"
+		_itemNum = 0 //reset so it doesn't keep going up for each item
+	}
+	
+	_sorted = ASORT('string,ascending',_sorted)
+
+	_sorted //how does this shit work again
+}
+
+RandomTalk : nonoverlap_pool {
+	_price = RAND(100) + 1
+	_item = goodItem
+
+	"\0\s[0]Did we get %(shoppingList)?\w6\nOh. I see it there. Okay."
+
+	//"\0\s[11]Look at this. It is "" true-needle-upside-down cake "" . Can we get it?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,true-needle-upside-down cake,%(_price)]Sure, why not?\__q %*\__q[OnItemReject,true-needle-upside-down cake,%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q\*"
+
+	"\0\s[11]Look at this. It is "" %(_item) "" . Can we get it?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q\*"
+
+	"\0\s[10]It is %(shoppingList). We have it. Why are we here again? \s[12]I want to go somewhere different, to get %(shoppingList), because we do not have that."
+
+	"\0\s[10]"" Real tomato soup, now with real tomatoes "" . \s[0]Why does it say that?\w6\n\s[10]Do not get it. I do not want it."
+
+	"\0\s[12]I want to go home. I am done walking.\n\n\f[color,disable]\f[italic,1]Sorry, but we still don't have %(shoppingList). We'll just look a little longer, okay?\f[color,default]\f[italic,default]\n\n...\w6\nI do not want to look more."
+
+		//_item = "%(adjective) %(adjective) %(item)"
+		"\0\s[11]Look, it is "" %(_item) "" , for %(_price) dollars. Can we get one?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+
+	"\0\s[0]I want ice cream when we are here. It would be good to have."
+
+	"\0\s[0]%(goodItem)... \w6\s[10]I do not want it. Please put it back."
+
+		//_item = "%(adjective) %(item)"
+		"\0\s[11]Did you see "" %(_item) "" ? It is %(_price) dollars. Should we get it?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+
+		//_item = "%(adjective)-%(adjective) %(item)"
+		"\0\s[0]\f[color,disable]\f[italic,1]Hey, did you see that %(_item)? Do you wanna get that?\f[italic,default]\f[color,default]\n\n\s[12]No. It does not look good. I do not think I will like it. Do not get it."
+
+		//_item = "%(adjective)-%(adjective) %(item)"
+		"\0\s[11]Look at this. It is "" %(_item) "" . I would like to get it, please.\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+
+
+	"\0\s[11]I see "" %(_item) "" . Can I have it?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+
+		"\0\s[0]"" %(_item) "" . It's not on the list. But can we get it?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+
+	"\0\s[11]I saw "" %(_item)"" . It sounds silly. I want to try it, please?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+
+	"\0\s[0]I want "" %(_item) "" . I can put it in the cart?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]"
+
+	"\0\s[0]"" %(_item) "" . I saw it a small time before. \s[5]I do not want it, but it sounded fun." //confounded!! weavechat has "fun" but not "funny" or "silly". Well, it's not the definitive factor in what i can write, but...
+
+	"\0\s[0]"" %(_item) "" . I like how it sounds. We should try it.\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]" //had the revelation i can just write in wc and type it up on here. does it take longer? probably yes. Is it more fun/makes the word choice(?) easier? absolutely yes
+
+	"\0\s[0]Look up there, it is "" %(_item) "" for just %(_price). Is that a good number of dollars?\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]I think so, yeah.\__q %*\__q[OnItemReject,%(_item),%(_price)]No, %(_price) is a lot more than we want to spend on %(_item).\__q\f[color,default]\f[italic,default]" //no price, no amount... should i send in an email that they're missing shopping vocabulary? but then, i don't wanna send an email...
+
+	"\0\s[0]"" %(_item) "".\w6\n\n\f[color,disable]\f[italic,1]Where did you see that?\n...No, don't answer that. Well, did you want it?\f[italic,default]\f[color,default]\n\n\s[10]......"
+
+	"\0\s[0]I want this. Look here please!\w6\n\n\_q\f[color,disable]""%(_item)"", huh? Hmm...\n\n[half]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]"
+}
+
+	/*	{
+		_item = goodItem
+		--
+		"\0\s[11]Look, it is "" %(_item) "" , for %(_price) dollars. Can we get one?"
+		"\0\s[11]Did you see "" %(_item) "" ? It is %(_price) dollars. Should we get it?"
+		"\0\s[11]Look at this. It is "" %(_item) "" . I would like to get it, please."
+		"\0\s[11]I see "" %(_item) "" . Can I have it?"
+		--
+		"\n\n\_q\f[color,disable]\f[italic,1]%*\__q[OnItemInCart,%(_item),%(_price)]Sure, why not?\__q %*\__q[OnItemReject,%(_item),%(_price)]No, not this time, I'm sorry.\__q\f[color,default]\f[italic,default]\_q"
+	}*/
+
+goodItem {
+	"%(item)"
+	"%(adjective) %(item)"
+	"%(adjective) %(adjective) %(item)"
+	"%(adjective)-%(adjective) %(item)"
+	"%(adjective) %(adjective) %(adjective) %(item)"
+	"%(adjective)-%(adjective)-%(adjective) %(item)"
+
+	"%(item) with %(item) sauce"
+	"%(adjective) %(item) with %(item) sauce"
+	"%(adjective) %(adjective) %(item) with %(item) sauce"
+	"%(adjective)-%(adjective) %(item) with %(item) sauce"
+	"%(adjective) %(adjective) %(adjective) %(item) with %(item) sauce"
+	"%(adjective)-%(adjective)-%(adjective) %(item) with %(item) sauce"
+
+	"%(item): %(adjective) %(item) included"
+	"%(adjective) %(item): %(adjective) %(item) included"
+	"%(adjective) %(adjective) %(item): %(adjective) %(item) included"
+	"%(adjective)-%(adjective) %(item): %(adjective) %(item) included"
+	"%(adjective) %(adjective) %(adjective) %(item): %(adjective) %(item) included"
+	"%(adjective)-%(adjective)-%(adjective) %(item): %(adjective) %(item) included"
+
+	"%(item), now with %(adjective) %(item)"
+	"%(adjective) %(item), now with %(adjective) %(item)"
+	"%(adjective) %(adjective) %(item): now with %(adjective) %(item)"
+	"%(adjective)-%(adjective) %(item): now with %(adjective) %(item)"
+	"%(adjective) %(adjective) %(adjective) %(item): now with %(adjective) %(item)"
+	"%(adjective)-%(adjective)-%(adjective) %(item): now with %(adjective) %(item)"
+
+	"%(adjective) %(item) with %(item)"
+	"%(adjective) %(adjective) %(item) with %(item)"
+	"%(adjective)-%(adjective) %(item) with %(item)"
+	"%(adjective) %(adjective) %(adjective) %(item) with %(item)"
+	"%(adjective)-%(adjective)-%(adjective) %(item) with %(item)"
+}
+
+adjective {
+	//being able to use a keyboard to type is already an assumption, but so is the rest of their language ability...
+	//so anything goes here.
+	"true-needle-upside-down"
+	"purple"
+	"tomato"
+	"fresh"
+	"squeezed"
+	"dry"
+	"sparkly"
+	"rainbow"
+	"wet"
+	"muddy"
+	"cold"
+	"hot"
+	"warm"
+	"frozen"
+	"soft"
+	"flavored"
+	"chocolate"
+	"vanilla"
+	"festive"
+	"happy"
+	"sad"
+	"cat-shaped"
+	"shaped"
+	"real"
+	"fake"
+	"glass"
+	"shatter-proof"
+}
+
+item {
+	"cake"
+	"ice cube tray"
+	"michael soft x box" //?
+	"construction paper"
+	"sponge"
+	"toy phone"
+	"ice cream"
+	"squeaky toy"
+	"alarm clock"
+	"smork alam"
+	"gaming cube"
+	"towel"
+	"dish set"
+	"fake plant"
+	"statue"
+	"cat pillow"
+	"tomato soup"
+}

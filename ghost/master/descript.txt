@@ -1,0 +1,17 @@
+charset,UTF-8
+
+name,Let's go get groceries!
+type,ghost
+
+shiori,yaya.dll
+
+craftman,SmokyCinnamonRoll
+craftmanw,SmokyCinnamonRoll
+craftmanurl,https://smokycinnamon.github.io/indifferentsorrel/
+
+sakura.name,Kitty shopper
+kero.name,Item
+
+balloon,Distant Lights 02 - Green
+
+sstp.allowunspecifiedsend,0
